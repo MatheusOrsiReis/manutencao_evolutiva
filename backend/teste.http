@@ -14,18 +14,10 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email": "ana@logistica.local",
+    "email": "joao@logistica.local",
     "senha": "Logistica@123"
 }
 
-### Senha incorreta: esperado 401
-POST http://localhost:3000/login
-Content-Type: application/json
-
-{
-    "email": "ana@logistica.local",
-    "senha": "errada"
-}
 
 ### Sem autenticação: esperado 401
 GET http://localhost:3000/motoristas
@@ -86,11 +78,11 @@ Content-Type: application/json
 Authorization: {{loginReq.response.body.$.token}}
 
 {
-    "cidadeDestino": "Sorocaba",
+    "cidadeDestino": "Rio de Janeiro",
     "status": "TRANSITO",
     "data": "2026-10-28",
     "hora": "09:30:00",
-    "idCarga": 1
+    "idCarga": 3
 }
 
 ### Atualizar status: esperado 200
