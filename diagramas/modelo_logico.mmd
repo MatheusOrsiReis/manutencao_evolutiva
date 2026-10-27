@@ -1,0 +1,32 @@
+erDiagram
+    FUNCIONARIOS {
+        int codFuncionario PK
+        varchar nome
+        varchar email
+        varchar senha "criptografada"
+    }
+    MOTORISTAS {
+        int codMotorista PK
+        varchar nome
+        varchar cnh "criptografada"
+        varchar cpf "criptografado"
+        varchar telefone
+    }
+    CARGAS {
+        int codCarga PK
+        varchar descricao
+        decimal peso
+        decimal volume
+        varchar codigoRastreio "somente digitos"
+        int idMotorista FK
+    }
+    ENTREGAS {
+        int codEntrega PK
+        varchar cidadeDestino
+        enum status "ENTREGUE ou TRANSITO"
+        date data
+        time hora
+        int idCarga FK
+    }
+    MOTORISTAS ||--o{ CARGAS : transporta
+    CARGAS ||--o{ ENTREGAS : possui

@@ -1,0 +1,126 @@
+### Cadastrar funcionário: esperado 201
+POST http://localhost:3000/funcionario
+Content-Type: application/json
+
+{
+    "nome": "João Souza",
+    "email": "joao@logistica.local",
+    "senha": "Logistica@123"
+}
+
+### Login com funcionário do script SQL
+# @name loginReq
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "ana@logistica.local",
+    "senha": "Logistica@123"
+}
+
+### Senha incorreta: esperado 401
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "ana@logistica.local",
+    "senha": "errada"
+}
+
+### Sem autenticação: esperado 401
+GET http://localhost:3000/motoristas
+
+### Cadastrar motorista: esperado 201
+POST http://localhost:3000/motorista
+Content-Type: application/json
+Authorization: {{loginReq.response.body.$.token}}
+
+{
+    "nome": "José Pereira",
+    "cnh": "12345678904",
+    "cpf": "98765432104",
+    "telefone": "11988887777"
+}
+
+### Listar motoristas com CPF e CNH legíveis: esperado 200
+GET http://localhost:3000/motoristas
+Authorization: {{loginReq.response.body.$.token}}
+
+### Buscar por nome: esperado 200
+GET http://localhost:3000/motoristas?nome=José
+Authorization: {{loginReq.response.body.$.token}}
+
+### Consultar motorista: esperado 200
+GET http://localhost:3000/motorista/1
+Authorization: {{loginReq.response.body.$.token}}
+
+### Atualizar motorista: esperado 200
+PUT http://localhost:3000/motorista/1
+Content-Type: application/json
+Authorization: {{loginReq.response.body.$.token}}
+
+{
+    "telefone": "11977776666"
+}
+
+### Cadastrar carga: esperado 201
+POST http://localhost:3000/carga
+Content-Type: application/json
+Authorization: {{loginReq.response.body.$.token}}
+
+{
+    "descricao": "Caixas de livros",
+    "peso": 120.5,
+    "volume": 1.2,
+    "codigoRastreio": "100004",
+    "idMotorista": 1
+}
+
+### Listar cargas: esperado 200
+GET http://localhost:3000/cargas
+Authorization: {{loginReq.response.body.$.token}}
+
+### Cadastrar entrega: esperado 201
+POST http://localhost:3000/entrega
+Content-Type: application/json
+Authorization: {{loginReq.response.body.$.token}}
+
+{
+    "cidadeDestino": "Sorocaba",
+    "status": "TRANSITO",
+    "data": "2026-10-28",
+    "hora": "09:30:00",
+    "idCarga": 1
+}
+
+### Atualizar status: esperado 200
+PUT http://localhost:3000/entrega/1
+Content-Type: application/json
+Authorization: {{loginReq.response.body.$.token}}
+
+{
+    "status": "ENTREGUE",
+    "data": "2026-10-28",
+    "hora": "15:30:00"
+}
+
+### Listar entregas ordenadas: esperado 200
+GET http://localhost:3000/entregas?ordem=ASC
+Authorization: {{loginReq.response.body.$.token}}
+
+### Filtrar intervalo, mais recentes primeiro: esperado 200
+GET http://localhost:3000/entregas?dataInicio=2026-10-25&dataFim=2026-10-28&ordem=DESC
+Authorization: {{loginReq.response.body.$.token}}
+
+### Status inválido: esperado 400
+PUT http://localhost:3000/entrega/1
+Content-Type: application/json
+Authorization: {{loginReq.response.body.$.token}}
+
+{
+    "status": "CANCELADO"
+}
+
+### Apagar motorista sem carga (ajuste o código após listar): esperado 200
+DELETE http://localhost:3000/motorista/4
+Authorization: {{loginReq.response.body.$.token}}
